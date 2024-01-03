@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width"
+        />
+        <title>ポケモンタイプ相性覚えゲーム</title>
+        <style>
+            h1 {
+                font-size: 3em;
+                text-align: center;
+                color: #999;
+            }
+            
+            .vertical {
+                writing-mode: vertical-rl;
+                height: 6em;
+            }
+            
+            .horizontal {
+                width: 6em;
+            }
+            
+            .double-circle {
+                background-color: #FCC;
+                color: #600;
+            }
+            .single-circle {
+                background-color: #FFC;
+                color: #660;
+            }
+            .triangle {
+                background-color: #CFC;
+                color: #060;
+            }
+            .cross {
+                background-color: #CCF;
+                color: #006;
+            }
+            .cursor {
+                border-color: #000;
+            }
+            .double-circle.miss {
+                background-color: #C00;
+                color: #FCC;
+            }
+            .single-circle.miss {
+                background-color: #CC0;
+                color: #FFC;
+            }
+            .triangle.miss {
+                background-color: #0C0;
+                color: #CFC;
+            }
+            .cross.miss {
+                background-color: #00C;
+                color: #CCF;
+            }
+            
+            th {
+                background-color: #FFF;
+                color: #999;
+            }
+            
+            th, td {
+                border: solid 0.1em #CCC;
+                text-align: center;
+                font-weight: normal;
+            }
+            
+            table {
+                margin: 0 auto;
+                border-spacing: 0;
+            }
+            
+            #grid {
+                width: 80svw;
+                margin: 1em auto;
+                display: grid;
+                grid-template-columns: repeat(10, 1fr);
+                grid-auto-rows: 4em;
+            }
+            #left-button {
+                grid-column-start: 1;
+                grid-column-end: 2;
+                grid-row-start: 2;
+                grid-row-end: 3;
+                background-color: #333;
+                color: #999;
+            }
+            #right-button {
+                grid-column-start: 3;
+                grid-column-end: 4;
+                grid-row-start: 2;
+                grid-row-end: 3;
+                background-color: #333;
+                color: #999;
+            }
+            #up-button {
+                grid-column-start: 2;
+                grid-column-end: 3;
+                grid-row-start: 1;
+                grid-row-end: 2;
+                background-color: #333;
+                color: #999;
+            }
+            #down-button {
+                grid-column-start: 2;
+                grid-column-end: 3;
+                grid-row-start: 3;
+                grid-row-end: 4;
+                background-color: #333;
+                color: #999;
+            }
+            #triangle-button {
+                grid-column-start: 8;
+                grid-column-end: 9;
+                grid-row-start: 2;
+                grid-row-end: 3;
+                background-color: #9F9;
+                color: #060;
+            }
+            #cross-button {
+                grid-column-start: 9;
+                grid-column-end: 10;
+                grid-row-start: 1;
+                grid-row-end: 2;
+                background-color: #99F;
+                color: #006;
+            }
+            #double-circle-button {
+                grid-column-start: 10;
+                grid-column-end: 11;
+                grid-row-start: 2;
+                grid-row-end: 3;
+                background-color: #F99;
+                color: #600;
+            }
+            #single-circle-button {
+                grid-column-start: 9;
+                grid-column-end: 10;
+                grid-row-start: 3;
+                grid-row-end: 4;
+                background-color: #FF9;
+                color: #660;
+            }
+            #reset-button {
+                grid-column-start: 5;
+                grid-column-end: 7;
+                grid-row-start: 2;
+                grid-row-end: 3;
+                background-color: #CCC;
+                color: #999;
+            }
+            
+            input[type="button"] {
+                border: solid 0.0em #000;
+                border-radius: 0.5em;
+                padding: 0.5em 1em;
+                background-color: #FFF;
+                color: #000;
+                font-weight: normal;
+                touch-action: manipulation;
+                -webkit-touch-callout: none;
+                -webkit-user-select:none;
+                -moz-touch-callout:none;
+                -moz-user-select:none;
+                user-select:none;
+            }
+
+            body {
+                background-color: #FFF;
+                color: #000;
+                font-family: sans-serif;
+                font-size: 2svw;
+                padding: 1em;
+                text-align: center;
+            }
+            
+            * {
+                margin: 0;
+                padding: 0;
+                line-height: 2em;
+                box-sizing: border-box;
+                touch-action: manipulation;
+                -webkit-touch-callout: none;
+                -webkit-user-select:none;
+                -moz-touch-callout:none;
+                -moz-user-select:none;
+                user-select:none;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>ポケモンタイプ相性覚えゲーム</h1>
+        <script defer>'use strict'
+            const type = [
+                '',
+                'ノーマル',
+                'ほのお',
+                'みず',
+                'でんき',
+                'くさ',
+                'こおり',
+                'かくとう',
+                'どく',
+                'じめん',
+                'ひこう',
+                'エスパー',
+                'むし',
+                'いわ',
+                'ゴースト',
+                'ドラゴン',
+                'あく',
+                'はがね',
+                'フェアリー',
+            ]
+            
+            const affinity = [
+                ['○', '○', '○', '○', '○', '○', '○', '○', '○', '○', '○', '○', '△', '×', '○', '○', '△', '○',],
+                ['○', '△', '△', '○', '◎', '◎', '○', '○', '○', '○', '○', '◎', '△', '○', '△', '○', '◎', '○',],
+                ['○', '◎', '△', '○', '△', '○', '○', '○', '◎', '○', '○', '○', '◎', '○', '△', '○', '○', '○',],
+                ['○', '○', '◎', '△', '△', '○', '○', '○', '×', '◎', '○', '○', '○', '○', '△', '○', '○', '○',],
+                ['○', '△', '◎', '○', '△', '○', '○', '△', '◎', '△', '○', '△', '◎', '○', '△', '○', '△', '○',],
+                ['○', '△', '△', '○', '◎', '△', '○', '○', '◎', '◎', '○', '○', '○', '○', '◎', '○', '△', '○',],
+                ['◎', '○', '○', '○', '○', '◎', '○', '△', '○', '△', '△', '△', '◎', '×', '○', '◎', '◎', '△',],
+                ['○', '○', '○', '○', '◎', '○', '○', '△', '△', '○', '○', '○', '△', '△', '○', '○', '×', '◎',],
+                ['○', '◎', '○', '◎', '△', '○', '○', '◎', '○', '×', '○', '△', '◎', '○', '○', '○', '◎', '○',],
+                ['○', '○', '○', '△', '◎', '○', '◎', '○', '○', '○', '○', '◎', '△', '○', '○', '○', '△', '○',],
+                ['○', '○', '○', '○', '○', '○', '◎', '◎', '○', '○', '△', '○', '○', '○', '○', '×', '△', '○',],
+                ['○', '△', '○', '○', '◎', '○', '△', '△', '○', '△', '◎', '○', '○', '△', '○', '◎', '△', '△',],
+                ['○', '◎', '○', '○', '○', '◎', '△', '○', '△', '◎', '○', '◎', '○', '○', '○', '○', '△', '○',],
+                ['×', '○', '○', '○', '○', '○', '○', '○', '○', '○', '◎', '○', '○', '◎', '○', '△', '○', '○',],
+                ['○', '○', '○', '○', '○', '○', '○', '○', '○', '○', '○', '○', '○', '○', '◎', '○', '△', '×',],
+                ['○', '○', '○', '○', '○', '○', '△', '○', '○', '○', '◎', '○', '○', '◎', '○', '△', '○', '△',],
+                ['○', '△', '△', '△', '○', '◎', '○', '○', '○', '○', '○', '○', '◎', '○', '○', '○', '△', '◎',],
+                ['○', '△', '○', '○', '○', '○', '◎', '△', '○', '○', '○', '○', '○', '○', '◎', '◎', '△', '○',],
+            ]
+            
+            const table = document.createElement('table')
+            const tr = [19]
+            const td = [19]
+            for(let r in type) {
+                tr[r] = document.createElement('tr')
+                table.append(tr[r])
+                td[r] = [19]
+                for(let d in type) {
+                    if(r === '0' || d === '0')
+                        td[r][d] = document.createElement('th')
+                    else
+                        td[r][d] = document.createElement('td')
+                    tr[r].append(td[r][d])
+                }
+            }
+            
+            for(let d in type) {
+                td[0][d].className = 'vertical'
+                td[0][d].textContent = type[d]
+            }
+            
+            for(let r in type) {
+                td[r][0].className = 'horizontal'
+                td[r][0].textContent = type[r]
+            }
+            
+            let playing = false
+            const cursor = {
+                x: 0,
+                y: 0,
+            }
+            
+            const startGame = () => {
+                for(let r in type) {
+                    for(let d in type) {
+                        if(r === '0' || d === '0') continue
+                        td[r][d].textContent = ''
+                        td[r][d].className = ''
+                    }
+                }
+                cursor.x = 0
+                cursor.y = 0
+                td[cursor.y + 1][cursor.x + 1].className = 'cursor'
+            }
+                
+            const resetGame = () => {
+                for(let r in type) {
+                    for(let d in type) {
+                        if(r === '0' || d === '0') continue
+                        const a = affinity[Number(r) - 1][Number(d) - 1]
+                        td[r][d].textContent = a
+                        if(a === '◎')td[r][d].className = 'double-circle'
+                        if(a === '○')td[r][d].className = 'single-circle'
+                        if(a === '△')td[r][d].className = 'triangle'
+                        if(a === '×')td[r][d].className = 'cross'
+                    }
+                }
+            }
+            resetGame()
+            
+            const moveCursor = (x = 0, y = 0) => {
+                td[cursor.y + 1][cursor.x + 1].classList.remove('cursor')
+                if(x < 0) x += 18
+                if(y < 0) y += 18
+                cursor.x = (cursor.x + x) % 18
+                cursor.y = (cursor.y + y) % 18
+                td[cursor.y + 1][cursor.x + 1].classList.add('cursor')
+            }
+            
+            const putCharactor = (charactor = '') => {
+                const d = td[cursor.y + 1][cursor.x + 1]
+                const a = affinity[cursor.y][cursor.x]
+                if(d.textContent !== '') return
+                d.classList.add(charactor)
+                if(charactor === 'double-circle') d.textContent = '◎'
+                if(charactor === 'single-circle') d.textContent = '○'
+                if(charactor === 'triangle') d.textContent = '△'
+                if(charactor === 'cross') d.textContent = '×'
+                
+                if(a !== d.textContent) {
+                    d.classList.add('miss')
+                    d.textContent = a
+                }
+            }
+            
+            document.body.append(table)
+            
+            
+            const grid = document.createElement('div')
+            grid.id = 'grid'
+            document.body.append(grid)
+            
+            const reset = document.createElement('input')
+            reset.value = 'スタート'
+            reset.id = 'reset-button'
+            reset.type = 'button'
+            grid.append(reset)
+            
+            reset.addEventListener('click', (e) => {
+                if(!playing) {
+                    playing = true
+                    reset.value = 'リセット'
+                    startGame()
+                } else {
+                    playing = false
+                    reset.value = 'スタート'
+                    resetGame()
+                }
+            })
+
+            
+            const left = document.createElement('input')
+            left.value = '←'
+            left.id = 'left-button'
+            left.type = 'button'
+            grid.append(left)
+            const right = document.createElement('input')
+            right.value = '→'
+            right.id = 'right-button'
+            right.type = 'button'
+            grid.append(right)
+            const up = document.createElement('input')
+            up.value = '↑'
+            up.id = 'up-button'
+            up.type = 'button'
+            grid.append(up)
+            const down = document.createElement('input')
+            down.value = '↓'
+            down.id = 'down-button'
+            down.type = 'button'
+            grid.append(down)
+            const cross = document.createElement('input')
+            cross.value = '×'
+            cross.id = 'cross-button'
+            cross.className = 'cross'
+            cross.type = 'button'
+            grid.append(cross)
+            const triangle = document.createElement('input')
+            triangle.value = '△'
+            triangle.id = 'triangle-button'
+            triangle.className = 'triangle'
+            triangle.type = 'button'
+            grid.append(triangle)
+            const singleCircle = document.createElement('input')
+            singleCircle.value = '○'
+            singleCircle.id = 'single-circle-button'
+            singleCircle.className = 'single-circle'
+            singleCircle.type = 'button'
+            grid.append(singleCircle)
+            const doubleCircle = document.createElement('input')
+            doubleCircle.value = '◎'
+            doubleCircle.id = 'double-circle-button'
+            doubleCircle.className = 'double-circle'
+            doubleCircle.type = 'button'
+            grid.append(doubleCircle)
+            
+            left.addEventListener('click', (e) => {
+                moveCursor(-1, 0)
+            })
+            right.addEventListener('click', (e) => {
+                moveCursor(1, 0)
+            })
+            up.addEventListener('click', (e) => {
+                moveCursor(0, -1)
+            })
+            down.addEventListener('click', (e) => {
+                moveCursor(0, 1)
+            })
+            doubleCircle.addEventListener('click', (e) => {
+                putCharactor('double-circle')
+            })
+            singleCircle.addEventListener('click', (e) => {
+                putCharactor('single-circle')
+            })
+            triangle.addEventListener('click', (e) => {
+                putCharactor('triangle')
+            })
+            cross.addEventListener('click', (e) => {
+                putCharactor('cross')
+            })
+            
+            // ダブルタップ禁止
+            document.addEventListener('dblclick', (e) => {
+                 event.preventDefault()
+            }, { passive: false })
+        </script>
+    </body>
+</html>
