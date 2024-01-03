@@ -6,7 +6,7 @@
             name="viewport"
             content="width=device-width"
         />
-        <title>ポケモンタイプ相性覚えゲーム 0.0.0</title>
+        <title>ポケモンタイプ相性覚えゲーム 0.0.1</title>
         <style>
             h1 {
                 font-size: 2em;
@@ -17,13 +17,14 @@
             .vertical {
                 word-break: break-all;
                 width: 2em;
-                height: 6em;
+                height: 8em;
                 padding: 0 0.4em;
             }
             
             .horizontal {
-                width: 6em;
+                width: 8em;
                 height: 2em;
+                padding: 0.4em 0;
             }
             
             .double-circle {
@@ -80,6 +81,26 @@
                 border: solid 0.2em #CCC;
                 margin: 0 auto;
                 border-spacing: 0;
+            }
+            
+            table tr:first-child th:first-child {
+                background-image: linear-gradient(
+                    to right top, transparent calc(50% - 0.1em), #CCC 50%, #CCC calc(50% + 0.1em), transparent calc(50% + 0.1em)
+                );
+                display: grid;
+                width: 8em;
+                height: 8em;
+                justify-content: space-between;
+                grid-template-columns: repeat(2, 1fr);
+                grid-auto-rows: 1fr;
+            }
+            
+            #column-header {
+                grid-column-start: 2;
+                text-align: right;
+            }
+            #row-header {
+                grid-column-start: 1;
             }
             
             #grid {
@@ -203,7 +224,7 @@
 	    <link rel="icon" href="./icon.svg">
     </head>
     <body>
-        <h1>ポケモンタイプ相性覚えゲーム 0.0.0</h1>
+        <h1>ポケモンタイプ相性覚えゲーム 0.0.1</h1>
         <script defer>'use strict'
             const type = [
                 '',
@@ -273,6 +294,15 @@
                 td[r][0].className = 'horizontal'
                 td[r][0].textContent = type[r]
             }
+            
+            const columnHeader = document.createElement('span')
+            columnHeader.textContent = '相手のポケモンのタイプ'
+            columnHeader.id = 'column-header'
+            td[0][0].append(columnHeader)
+            const rowHeader = document.createElement('span')
+            rowHeader.textContent = '自分の技のタイプ'
+            rowHeader.id = 'row-header'
+            td[0][0].append(rowHeader)
             
             let playing = false
             const cursor = {
@@ -419,15 +449,23 @@
             })
             doubleCircle.addEventListener('click', (e) => {
                 putCharactor('double-circle')
+                moveCursor(0, 1)
+                if(cursor.y === 0) moveCursor(1, 0)
             })
             singleCircle.addEventListener('click', (e) => {
                 putCharactor('single-circle')
+                moveCursor(0, 1)
+                if(cursor.y === 0) moveCursor(1, 0)
             })
             triangle.addEventListener('click', (e) => {
                 putCharactor('triangle')
+                moveCursor(0, 1)
+                if(cursor.y === 0) moveCursor(1, 0)
             })
             cross.addEventListener('click', (e) => {
                 putCharactor('cross')
+                moveCursor(0, 1)
+                if(cursor.y === 0) moveCursor(1, 0)
             })
             
             // ダブルタップ禁止
