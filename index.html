@@ -65,15 +65,19 @@
             th {
                 background-color: #FFF;
                 color: #999;
+                font-weight: bold;
+                border: solid 0.2em #CCC;
+                text-align: center;
             }
             
-            th, td {
-                border: solid 0.1em #CCC;
+            td {
+                border: solid 0.2em #CCC;
                 text-align: center;
-                font-weight: normal;
+                font-weight: bold;
             }
             
             table {
+                border: solid 0.2em #CCC;
                 margin: 0 auto;
                 border-spacing: 0;
             }
@@ -164,7 +168,7 @@
                 padding: 0.5em 1em;
                 background-color: #FFF;
                 color: #000;
-                font-weight: normal;
+                font-weight: bold;
                 font-size: 2svmin;
                 touch-action: manipulation;
                 -webkit-touch-callout: none;
@@ -305,6 +309,7 @@
             resetGame()
             
             const moveCursor = (x = 0, y = 0) => {
+                if(!playing) return
                 td[cursor.y + 1][cursor.x + 1].classList.remove('cursor')
                 if(x < 0) x += 18
                 if(y < 0) y += 18
